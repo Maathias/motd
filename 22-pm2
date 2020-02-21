@@ -2,7 +2,7 @@
 const config = require('./config.json'),
 	ex = require('./execute')
 
-ex('pm2 jlist').then(out => {
+ex(`sudo -H -u ${config.pm2_user} bash -c "pm2 jlist"`).then(out => {
 	out = JSON.parse(out)
 
 	console.log()

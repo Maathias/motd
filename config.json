@@ -5,5 +5,6 @@
 	"temps": {
 		"warn": 0.85,
 		"high": 0.6 
-	}
+	},
+	"pm2_user": "mathias"
 }
