@@ -1,4 +1,4 @@
-module.exports = function bar(used, total, max = 40, chars = ['#', '-']) {
+module.exports = function bar(used, total, chars = ['#', '-'], max = 40) {
 
 	var percent = used / total,
 		len = Math.round(percent * max),

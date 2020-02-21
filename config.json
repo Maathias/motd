@@ -1,3 +1,5 @@
 {
-	"publicip": "/home/mathias/git/ovh-dynhost/logs/short.log"
+	"publicip": "/home/mathias/git/ovh-dynhost/logs/short.log",
+	"theme": "\\e[32m",
+	"hostname": "odin"
 }

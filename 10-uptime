@@ -6,7 +6,6 @@ const config = require('./config.json'),
 
 var stats = {}
 
-
 Promise.all([
 	ex('uptime -p').then(out => {
 		stats.uptime = out.slice(3, -1)
@@ -66,8 +65,8 @@ Promise.all([
 	}
 	console.log()
 
-	console.log(`Memory: ${readable(stats.memory.used)} MB out of ${readable(stats.memory.total)} MB\n${bar(stats.memory.used, stats.memory.total, 55, ['\x1b[93m=', '-'])}`)
-	console.log(`Swap:   ${readable(stats.swap.used)} MB out of ${readable(stats.swap.total)} MB\n${bar(stats.swap.used, stats.swap.total, 55, ['\x1b[93m=', '-'])}`)
+	console.log(`Memory: ${readable(stats.memory.used)} MB out of ${readable(stats.memory.total)} MB\n${bar(stats.memory.used, stats.memory.total, ['\x1b[93m=', '-'])}`)
+	console.log(`Swap:   ${readable(stats.swap.used)} MB out of ${readable(stats.swap.total)} MB\n${bar(stats.swap.used, stats.swap.total, ['\x1b[93m=', '-'])}`)
 	console.log()
 
 	console.log(`Public IP: \x1b[36m${stats.public}\x1b[0m`)

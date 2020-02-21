@@ -1,4 +1,4 @@
 #!/bin/bash
-echo -en "\e[31m"
-figlet $HOSTNAME -cf slant;#
+echo -en $(echo "process.stdout.write(require('./config.json').theme)" | node)
+figlet $HOSTNAME -f slant;#
 echo -en "\e[0m"
