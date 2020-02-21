@@ -6,6 +6,7 @@ const config = require('./config.json'),
 
 ex('sensors -j').then(out => {
 	out = JSON.parse(out)
+	console.log()
 	console.log(`Temperatures:`)
 	for(let adapter in out){
 		console.log(` \x1b[96m${adapter}\x1b[0m`)
@@ -18,8 +19,8 @@ ex('sensors -j').then(out => {
 					
 					console.log(`  \x1b[34m${prop}:\x1b[0m ${
 						stat > 1 ? '\x1b[1m\x1b[31m' : 
-						stat > .85 ? '\x1b[31m' : 
-						stat > .5 ? '\x1b[93m' : ''
+						stat > config.warn ? '\x1b[31m' : 
+						stat > config.high ? '\x1b[93m' : ''
 						}${out[adapter][prop][tmp]}°C\x1b[0m`)
 				}
 			}
