@@ -1,7 +1,7 @@
 #!/bin/bash
-mv * /etc/update-motd/
+mv * /etc/update-motd.d/
 
-chmod -x /etc/update-motd/*
+chmod -x /etc/update-motd.d/*
 
 chmod +x /etc/update-motd.d/00-header
 chmod +x /etc/update-motd.d/05-logo
