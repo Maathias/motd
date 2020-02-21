@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+const { exec } = require('child_process'),
+	bar = require('./bar'),
+	readable = require('./readable')
+
+function ex(com) {
+	return new Promise((resolve, reject) => {
+		exec(com, (err, stdout, stderr) => {
+			resolve(`/dev/sda2       41022688  10558944  28350208  28% /
+/dev/sda3      102687672   9977612  87450796  11% /home
+/dev/sda4      815881720 335298544 439068888  44% /media`)
+			if (stderr) reject(stderr)
+			resolve(stdout)
+		})
+	})
+}
+
+ex('df').then(out => {// | grep dev/sd
+	out.split('\n').forEach(drive => {
+		grep = /\/dev\/(sd[a-z]\d)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+%) (\/\S*)$/gm.exec(drive)
+		if(grep == null) return
+		console.log()
+		console.log(`\x1b[96m${grep[1]}\x1b[0m mounted on \x1b[34m${grep[6]}\x1b[0m \x1b[33m${readable(grep[4], 2)}GB\x1b[0m of ${readable(grep[2], 2)}GB`)
+		console.log(bar(grep[4], grep[2], 40, ['\x1b[94m=', '-']))
+	})
+})

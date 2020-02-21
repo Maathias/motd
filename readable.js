@@ -1,0 +1,1 @@
+module.exports = (value, level = 1) => ~~(value / Math.pow(1024, level))

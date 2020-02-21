@@ -1,0 +1,81 @@
+#!/usr/bin/env node
+const { exec } = require('child_process')
+
+function getStatus(name) {
+	return new Promise((resolve, reject) => {
+		exec(`systemctl status ${name}`, (err, stdout, stderr) => {
+			resolve(`Loaded: loaded (/lib/systemd/system/isc-dhcp-server6.service; enabled; vendor preset:
+   Active: active (Result: exit-code) since Wed 2020-02-19 15:40:57 CET; 1 day 22h ago
+   Memory: 6.8M
+     Docs: man:dhcpd(8)
+ Main PID: 726 (code=exited, status=1/FAILURE)`)
+			if (err) {
+				reject(err);
+			}
+			resolve(stdout)
+		});
+	}).then(stdout => {
+		return {
+			active: /Active: (.+?) .*; (.*) ago$/gm.exec(stdout).slice(1, 3),
+			memory: (/Memory: (\S+)$/gm.exec(stdout) || []).slice(1, 2),
+			loaded: /Loaded: (.+?) .*?; (.*?); .*$/gm.exec(stdout).slice(1, 3)
+		}
+	})
+}
+
+const services = [
+	'nginx',
+	['bind9', 'DNS'],
+	['isc-dhcp-server', 'DHCP'],
+	['sshd', 'SSH'],
+	['plexmediaserver', 'Plex'],
+	['smbd', 'Samba'],
+]
+var spaces = 0
+
+var promises = []
+
+for (let service of services) {
+	if (typeof service == 'string') service = [service, service]
+	if (service[1].length > spaces) spaces = service[1].length+1
+
+	promises.push(getStatus(service[0]).then(status => {
+		return [service[1], status]
+	}))
+}
+
+var out = []
+
+Promise.all(promises).then(services => {
+	for (let service of services) {
+		var before = '\x1b[32m\u25CF\x1b[0m'
+		if (service[1].active[0] != 'active') before = '\x1b[31m\u25CF'
+		out.push(` ${before} \x1b[1m${
+			service[0]	// service name
+			}\x1b[0m:${
+			' '.repeat(spaces - service[0].length) // spacing
+			}${
+			service[1].active[0] != 'active' ? service[1].active[0] : service[1].memory[0] || 'N/A' // status
+			}${
+			service[1].active[0] != 'active' ? ', '+service[1].active[1] : '' // if failed. print
+			} ${
+			service[1].loaded[1] != 'enabled' ? '\x1b[33mdisabled\x1b[0m' : '' // if disabled, print
+			}`)
+	}
+
+	spaces = 0
+
+	for (let service of out) {
+		if (service.length > spaces) spaces = service.length
+	}
+	
+	console.log()
+	console.log("Services: ")
+	for (let i in out) {
+		process.stdout.write(out[i])
+		process.stdout.write(' '.repeat(spaces - out[i].length))
+		if ((i+1) % 3 == 0) process.stdout.write('\n')
+	}
+	if ((out.length + 1) % 3 == 0) process.stdout.write('\n')
+})
+

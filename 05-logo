@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -en "\e[31m"
+figlet $HOSTNAME -cf slant;#
+echo -en "\e[0m"

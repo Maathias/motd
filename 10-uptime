@@ -1,0 +1,80 @@
+#!/usr/bin/env node
+const config = require('./config.json'),
+	ex = require('./execute'),
+	bar = require('./bar'),
+	readable = require('./readable')
+
+var stats = {}
+
+
+Promise.all([
+	ex('uptime -p').then(out => {
+		stats.uptime = out.slice(3, -1)
+	}),
+	ex('uptime').then(out => {
+		var [, users, a, b, c] = /(\d+) users*?,  load average: (\d+\.\d+), (\d+\.\d+), (\d+\.\d+)/gm.exec(out)
+		stats.loads = [parseFloat(a), parseFloat(b), parseFloat(c)]
+		stats.users = users
+	}),
+	ex('free').then(out => {
+		var grep = /Mem: *?(\d+) *?(\d+) *?(\d+) *?(\d+) *?(\d+) *?(\d+)\nSwap: *?(\d+) *?(\d+) *?(\d+)/gm.exec(out)
+		stats.memory = {
+			total: grep[1],
+			used: grep[2],
+			free: grep[3],
+			shared: grep[4],
+			cache: grep[5],
+			available: grep[6],
+		}
+		stats.swap = {
+			total: grep[7],
+			used: grep[8],
+			free: grep[9]
+		}
+	}),
+	ex(`cat ${config.publicip}`).then(out => {
+		stats.public = /.* (\d+\.\d+\.\d+\.\d+)$/gms.exec(out)[1]
+	}).catch(err => {
+		stats.public = 'N/A'
+	}),
+	ex('ip addr').then(out => {
+		var m, r = /\d+: (\S+): .*?link\/(ether|loopback) (\S+:\S+:\S+:\S+:\S+:\S+).*?inet (\d+\.\d+\.\d+\.\d+\/\d+) /gs
+		stats.nics = {}
+		stats.nics.spaces = 0
+		do {
+			m = r.exec(out);
+			if (m) {
+				stats.nics[m[1]] = {
+					mac: m[3],
+					addr: m[4]
+				}
+				if (m[1].length > stats.nics.spaces) stats.nics.spaces = m[1].length
+			}
+		} while (m);
+	})
+]).then(() => {
+	console.log(`System is up \x1b[34m${stats.uptime}\x1b[0m`)
+	console.log(`${stats.users} user${stats.users == 1 ? '' : 's'} logged in`)
+	process.stdout.write(`CPU: `)
+	for (load of stats.loads) {
+		let color = '\x1b[32m'
+		if (load > 0.5) color = '\x1b[33m'
+		else if (load > 1) color = '\x1b[31m'
+		process.stdout.write(color)
+		process.stdout.write(load.toFixed(2) + ' ')
+		process.stdout.write('\x1b[0m')
+	}
+	console.log()
+
+	console.log(`Memory: ${readable(stats.memory.used)} MB out of ${readable(stats.memory.total)} MB\n${bar(stats.memory.used, stats.memory.total, 55, ['\x1b[93m=', '-'])}`)
+	console.log(`Swap:   ${readable(stats.swap.used)} MB out of ${readable(stats.swap.total)} MB\n${bar(stats.swap.used, stats.swap.total, 55, ['\x1b[93m=', '-'])}`)
+	console.log()
+
+	console.log(`Public IP: \x1b[36m${stats.public}\x1b[0m`)
+
+	for (let nic in stats.nics) {
+		if(nic === 'spaces') continue
+		console.log(` ${nic}:${' '.repeat(stats.nics.spaces - nic.length+1)}${stats.nics[nic].mac} - ${stats.nics[nic].addr}`)
+	}
+
+})
