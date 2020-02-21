@@ -1,0 +1,18 @@
+#!/bin/bash
+mv * /etc/update-motd/
+
+chmod -x /etc/update-motd/*
+
+chmod +x /etc/update-motd/00-header
+chmod +x /etc/update-motd/05-logo
+chmod +x /etc/update-motd/10-uptime
+chmod +x /etc/update-motd/18-mounts
+chmod +x /etc/update-motd/19-temps
+chmod +x /etc/update-motd/20-services
+chmod +x /etc/update-motd/22-pm2
+chmod +x /etc/update-motd/90-updates-available
+chmod +x /etc/update-motd/91-release-upgrade
+chmod +x /etc/update-motd/92-unattended-upgrades
+chmod +x /etc/update-motd/95-hwe-eol
+chmod +x /etc/update-motd/98-fsck-at-reboot
+chmod +x /etc/update-motd/98-reboot-required
