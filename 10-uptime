@@ -57,8 +57,8 @@ Promise.all([
 	process.stdout.write(`CPU: `)
 	for (load of stats.loads) {
 		let color = '\x1b[32m'
-		if (load > 0.5) color = '\x1b[33m'
-		else if (load > 1) color = '\x1b[31m'
+		if (load > 1) color = '\x1b[31m'
+		else if (load > 0.5) color = '\x1b[33m'
 		process.stdout.write(color)
 		process.stdout.write(load.toFixed(2) + ' ')
 		process.stdout.write('\x1b[0m')
