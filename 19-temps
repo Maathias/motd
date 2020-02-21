@@ -1,0 +1,28 @@
+#!/usr/bin/env node
+const config = require('./config.json'),
+	ex = require('./execute'),
+	bar = require('./bar'),
+	readable = require('./readable')
+
+ex('#sensors').then(out => {
+	out = JSON.parse(out)
+	console.log(`Temperatures:`)
+	for(let adapter in out){
+		console.log(` \x1b[96m${adapter}\x1b[0m`)
+		for(prop in out[adapter]){
+			if (typeof out[adapter][prop] == 'string') continue
+			for (let tmp in out[adapter][prop]){
+				if (/temp.*input/.test(tmp)){
+					let name = tmp.slice(0, -6),
+					stat = out[adapter][prop][tmp] / (out[adapter][prop][name+'_max'] || 85)
+					
+					console.log(`  \x1b[34m${prop}:\x1b[0m ${
+						stat > 1 ? '\x1b[1m\x1b[31m' : 
+						stat > .85 ? '\x1b[31m' : 
+						stat > .5 ? '\x1b[93m' : ''
+						}${out[adapter][prop][tmp]}°C\x1b[0m`)
+				}
+			}
+		}	
+	}
+})
