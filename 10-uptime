@@ -52,6 +52,7 @@ Promise.all([
 		} while (m);
 	})
 ]).then(() => {
+	console.log()
 	console.log(`System is up \x1b[34m${stats.uptime}\x1b[0m`)
 	console.log(`${stats.users} user${stats.users == 1 ? '' : 's'} logged in`)
 	process.stdout.write(`CPU: `)
@@ -72,8 +73,8 @@ Promise.all([
 	console.log(`Public IP: \x1b[36m${stats.public}\x1b[0m`)
 
 	for (let nic in stats.nics) {
-		if(nic === 'spaces') continue
-		console.log(` ${nic}:${' '.repeat(stats.nics.spaces - nic.length+1)}${stats.nics[nic].mac} - ${stats.nics[nic].addr}`)
+		if (nic === 'spaces') continue
+		console.log(` ${nic}:${' '.repeat(stats.nics.spaces - nic.length + 1)}${stats.nics[nic].mac} - ${stats.nics[nic].addr}`)
 	}
 
 })
