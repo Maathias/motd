@@ -1,5 +1,5 @@
 #!/bin/bash
-mv * /etc/update-motd.d/
+cp * /etc/update-motd.d/
 
 chmod -x /etc/update-motd.d/*
 
