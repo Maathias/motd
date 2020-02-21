@@ -4,7 +4,7 @@ const config = require('./config.json'),
 	bar = require('./bar'),
 	readable = require('./readable')
 
-ex('#sensors').then(out => {
+ex('sensors -j').then(out => {
 	out = JSON.parse(out)
 	console.log(`Temperatures:`)
 	for(let adapter in out){
