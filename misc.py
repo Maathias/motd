@@ -6,3 +6,6 @@ def bar(used, total, chars=['#', '-'], max=40):
 	rest = max - len
 
 	return " {:.1f}% {}[{}\x1b[0m{}\x1b[0m]".format(percent*100, 'a' if percent>=1 else (' ' if percent >=0.1 else '  '), chars[0]*len, chars[1]*rest)
+
+def gig(bytes):
+	return float(bytes)/(1024*1024)

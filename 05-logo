@@ -1,4 +1,4 @@
 #!/bin/bash
-echo -en '\e[32m'
-figlet $HOSTNAME -f slant;#
-echo -en "\e[0m"
+echo -en '\e[32m';
+figlet $HOSTNAME -f slant;
+echo -en "\e[0m";
