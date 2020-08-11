@@ -5,9 +5,9 @@ chmod -x /etc/update-motd.d/*
 
 chmod +x /etc/update-motd.d/00-header
 chmod +x /etc/update-motd.d/05-logo
-chmod +x /etc/update-motd.d/10-uptime.py
-chmod +x /etc/update-motd.d/18-mounts.py
-chmod +x /etc/update-motd.d/19-temps.py
+chmod +x /etc/update-motd.d/10-uptime
+chmod +x /etc/update-motd.d/18-mounts
+chmod +x /etc/update-motd.d/19-temps
 # chmod +x /etc/update-motd.d/20-services
 # chmod +x /etc/update-motd.d/22-pm2
 chmod +x /etc/update-motd.d/90-updates-available
