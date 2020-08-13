@@ -1,20 +1,24 @@
 #!/bin/bash
-$dest=/etc/update-motd.d
+dest=/etc/update-motd.d
+color=${1:-39}
+
 cp *-* $dest/
 cp misc.py $dest/
 
+echo "color=\"\e[${color}m\"" > $dest/color
+
 chmod -x $dest/*
 
-chmod +x $dest00/-header
-chmod +x $dest05/-logo
-chmod +x $dest10/-uptime
-chmod +x $dest18/-mounts
-chmod +x $dest19/-temps
-# chmod +x $dest20-services
-# chmod +x $dest22-pm2
-chmod +x $dest90/-updates-available
-chmod +x $dest91/-release-upgrade
-chmod +x $dest92/-unattended-upgrades
-chmod +x $dest95/-hwe-eol
-chmod +x $dest98/-fsck-at-reboot
-chmod +x $dest98/-reboot-required
+chmod +x $dest/-header
+chmod +x $dest/-logo
+chmod +x $dest/-uptime
+chmod +x $dest/-mounts
+chmod +x $dest/-temps
+chmod -x $dest/-services
+chmod -x $dest/-pm2
+chmod +x $dest/-updates-available
+chmod +x $dest/-release-upgrade
+chmod +x $dest/-unattended-upgrades
+chmod +x $dest/-hwe-eol
+chmod +x $dest/-fsck-at-reboot
+chmod +x $dest/-reboot-required
