@@ -1,24 +1,36 @@
 #!/bin/bash
-dest=/etc/update-motd.d
-color=${1:-39}
 
+if [[ $UID != 0 ]]; then
+    echo "Please run this script with root privileges"
+    exit 1
+fi
+
+dest=/etc/update-motd.d
+
+# dependencies
+apt install figlet python3 -y
+
+# turn off stock motd news
+systemctl stop motd-news.timer
+systemctl disable motd-news.timer
+
+# copy files to destination
 cp *-* $dest/
 cp misc.py $dest/
 
-echo "color=\"\e[${color}m\"" > $dest/color
-
+# set execute permissions
 chmod -x $dest/*
 
-chmod +x $dest/-header
-chmod +x $dest/-logo
-chmod +x $dest/-uptime
-chmod +x $dest/-mounts
-chmod +x $dest/-temps
-chmod -x $dest/-services
-chmod -x $dest/-pm2
-chmod +x $dest/-updates-available
-chmod +x $dest/-release-upgrade
-chmod +x $dest/-unattended-upgrades
-chmod +x $dest/-hwe-eol
-chmod +x $dest/-fsck-at-reboot
-chmod +x $dest/-reboot-required
+chmod +x $dest/00-header
+chmod +x $dest/05-logo
+chmod +x $dest/10-uptime
+chmod +x $dest/18-mounts
+chmod +x $dest/19-temps
+#chmod +x $dest/20-services
+#chmod +x $dest/22-pm2
+chmod +x $dest/90-updates-available
+chmod +x $dest/91-release-upgrade
+chmod +x $dest/92-unattended-upgrades
+chmod +x $dest/95-hwe-eol
+chmod +x $dest/98-fsck-at-reboot
+chmod +x $dest/98-reboot-required

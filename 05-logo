@@ -1,5 +1,5 @@
 #!/bin/bash
 source color
-echo -en ${color};
+echo -en "\e[94m";
 figlet $HOSTNAME -f slant;
 echo -en "\e[0m";
