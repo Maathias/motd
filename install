@@ -28,6 +28,7 @@ chmod +x $dest/18-mounts
 chmod +x $dest/19-temps
 #chmod +x $dest/20-services
 #chmod +x $dest/22-pm2
+chmod +x $dest/88-esm-announce
 chmod +x $dest/90-updates-available
 chmod +x $dest/91-release-upgrade
 chmod +x $dest/92-unattended-upgrades
