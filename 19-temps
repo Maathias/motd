@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 import os
-import misc
+import json
 
-temps = os.popen("sensors -u").read()
-temps = temps.split('\n')
-lastline = False
-out = ""
+sensors = json.loads(os.popen("sensors -j").read())
 
-for line in temps:
-    # print(repr(lastline), repr(line))
-    if lastline == '':
-        out += line+'\n'
-    lastline = line
+for sensor in sensors:
+    print(sensor)
+    for value in sensors[sensor]:
+        if value == "Adapter":
+            continue
 
-    if 'temp' in line and 'input' in line:
-        line = line.split()
-        out += " {} {}{:.1f}\x1b[0m\n".format(
-            line[0],
-            '\x1b[91m' if float(line[1])>80 else '\x1b[93m' if float(line[1])>65 else '\x1b[92m',
-            float(line[1])
-            )
+        for input in sensors[sensor][value]:
+            if input.endswith('input'):
+                c = float(sensors[sensor][value][input])
 
-print(out)
+                print(" {}{:.1f}\x1b[0m {}".format(
+                    '\x1b[91m' if c > 80 else '\x1b[93m' if
+                    c > 65 else '\x1b[92m',
+                    c,
+                    value
+                ))
+
+print()
