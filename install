@@ -8,7 +8,7 @@ fi
 dest=/etc/update-motd.d
 
 # dependencies
-apt install figlet python3 -y
+apt install figlet python3 lm-sensors -y
 
 # turn off stock motd news
 systemctl stop motd-news.timer
@@ -18,20 +18,20 @@ systemctl disable motd-news.timer
 cp *-* $dest/
 cp misc.py $dest/
 
-# set execute permissions
+# turn all modules off
 chmod -x $dest/*
 
-chmod +x $dest/00-header
-chmod +x $dest/05-logo
-chmod +x $dest/10-uptime
-chmod +x $dest/18-mounts
-chmod +x $dest/19-temps
-#chmod +x $dest/20-services
-#chmod +x $dest/22-pm2
-chmod +x $dest/88-esm-announce
-chmod +x $dest/90-updates-available
-chmod +x $dest/91-release-upgrade
-chmod +x $dest/92-unattended-upgrades
-chmod +x $dest/95-hwe-eol
-chmod +x $dest/98-fsck-at-reboot
-chmod +x $dest/98-reboot-required
+# turn on selected
+chmod +x    $dest/00-header \
+            $dest/05-logo \
+            $dest/10-uptime \
+            $dest/18-mounts \
+            $dest/19-temps \
+            $dest/21-services \
+            $dest/88-esm-announce \
+            $dest/90-updates-available \
+            $dest/91-release-upgrade \
+            $dest/92-unattended-upgrades \
+            $dest/95-hwe-eol \
+            $dest/98-fsck-at-reboot \
+            $dest/98-reboot-required
