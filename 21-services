@@ -1,0 +1,13 @@
+#!/usr/bin/env python3
+
+import os
+
+failed = os.popen('systemctl --failed').read().split('\n')[1:-7]
+
+if len(failed) > 0:
+    for service in failed:
+        dot, name, load, active, sub, *description = service.split(' ')
+
+        print('\x1b[31m', dot, name, active, '\x1b[0m', ' '.join(description))
+
+    print()
